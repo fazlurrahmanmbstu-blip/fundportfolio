@@ -1,0 +1,1100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Fund Management Portal</title>
+  <style>
+    :root{
+      --bg1:#0f172a;
+      --bg2:#4c1d95;
+      --bg3:#9d174d;
+      --card:#ffffff;
+      --text:#0f172a;
+      --muted:#64748b;
+      --primary:#7c3aed;
+      --secondary:#0ea5e9;
+      --success:#16a34a;
+      --warning:#d97706;
+      --danger:#dc2626;
+      --border:#e2e8f0;
+      --shadow:0 18px 40px rgba(15,23,42,.12);
+    }
+
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: Arial, Helvetica, sans-serif;
+      background: linear-gradient(135deg, var(--bg1), var(--bg2), var(--bg3));
+      color: #fff;
+      min-height: 100vh;
+    }
+    .app-shell {
+      min-height: 100vh;
+      padding: 24px;
+    }
+    .container {
+      max-width: 1240px;
+      margin: 0 auto;
+    }
+    .hidden { display: none !important; }
+    .grid { display: grid; gap: 20px; }
+    .grid-2 { grid-template-columns: repeat(2, minmax(0,1fr)); }
+    .grid-3 { grid-template-columns: repeat(3, minmax(0,1fr)); }
+    .grid-4 { grid-template-columns: repeat(4, minmax(0,1fr)); }
+    .grid-5 { grid-template-columns: 2fr 3fr; }
+
+    .hero {
+      display: grid;
+      grid-template-columns: 1.2fr .9fr;
+      gap: 28px;
+      align-items: center;
+      padding-top: 24px;
+    }
+
+    .badge {
+      display: inline-block;
+      padding: 8px 14px;
+      border-radius: 999px;
+      background: rgba(255,255,255,.12);
+      border: 1px solid rgba(255,255,255,.15);
+      color: #fff;
+      font-size: 13px;
+      font-weight: 700;
+      margin-bottom: 12px;
+    }
+
+    .title {
+      font-size: 52px;
+      line-height: 1.08;
+      margin: 0 0 12px;
+      font-weight: 900;
+    }
+    .subtitle {
+      color: rgba(255,255,255,.85);
+      font-size: 17px;
+      line-height: 1.7;
+      margin: 0;
+      max-width: 760px;
+    }
+
+    .feature-card, .card {
+      background: var(--card);
+      color: var(--text);
+      border-radius: 24px;
+      box-shadow: var(--shadow);
+      border: 1px solid rgba(255,255,255,.06);
+    }
+
+    .feature-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0,1fr));
+      gap: 16px;
+      margin-top: 26px;
+      max-width: 760px;
+    }
+    .feature-card {
+      background: rgba(255,255,255,.1);
+      color: #fff;
+      padding: 18px;
+      border: 1px solid rgba(255,255,255,.14);
+      box-shadow: none;
+      backdrop-filter: blur(6px);
+    }
+    .feature-card h4 {
+      margin: 0 0 6px;
+      font-size: 16px;
+    }
+    .feature-card p {
+      margin: 0;
+      color: rgba(255,255,255,.8);
+      font-size: 13px;
+      line-height: 1.5;
+    }
+
+    .card { padding: 22px; }
+    .card h2, .card h3, .card h4 {
+      margin: 0 0 8px;
+    }
+    .muted { color: var(--muted); }
+
+    .login-tabs {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 16px;
+    }
+    .tab-btn, .btn {
+      border: 0;
+      cursor: pointer;
+      border-radius: 14px;
+      padding: 12px 16px;
+      font-weight: 700;
+      transition: .2s ease;
+    }
+    .tab-btn {
+      background: #eef2ff;
+      color: #4338ca;
+      flex: 1;
+    }
+    .tab-btn.active {
+      background: linear-gradient(90deg, var(--primary), #d946ef);
+      color: #fff;
+    }
+    .btn-primary {
+      background: linear-gradient(90deg, var(--primary), #d946ef);
+      color: #fff;
+    }
+    .btn-secondary {
+      background: linear-gradient(90deg, var(--secondary), var(--primary));
+      color: #fff;
+    }
+    .btn-outline {
+      background: #fff;
+      border: 1px solid var(--border);
+      color: var(--text);
+    }
+    .btn-success { background: #ecfdf5; color: #166534; border:1px solid #bbf7d0; }
+    .btn-danger { background: #fef2f2; color: #991b1b; border:1px solid #fecaca; }
+    .btn:hover, .tab-btn:hover { transform: translateY(-1px); opacity: .96; }
+
+    .field { margin-bottom: 14px; }
+    label {
+      display: block;
+      font-size: 14px;
+      font-weight: 700;
+      margin-bottom: 8px;
+      color: var(--text);
+    }
+    input, select {
+      width: 100%;
+      padding: 13px 14px;
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      font-size: 14px;
+      outline: none;
+      background: #fff;
+    }
+    input:focus, select:focus {
+      border-color: var(--primary);
+      box-shadow: 0 0 0 4px rgba(124,58,237,.12);
+    }
+
+    .portal-bg {
+      background: linear-gradient(135deg, #eff6ff, #ffffff, #faf5ff);
+      color: var(--text);
+      min-height: 100vh;
+    }
+    .portal-admin-bg {
+      background: linear-gradient(135deg, #f8fafc, #f5f3ff, #fdf2f8);
+      color: var(--text);
+      min-height: 100vh;
+    }
+    .portal-shell {
+      max-width: 1280px;
+      margin: 0 auto;
+      padding: 28px 20px 40px;
+    }
+    .topbar {
+      display:flex;
+      justify-content:space-between;
+      align-items:flex-start;
+      gap:20px;
+      margin-bottom: 22px;
+    }
+    .title-sm {
+      font-size: 34px;
+      font-weight: 900;
+      margin: 10px 0 8px;
+      color: var(--text);
+    }
+    .pill {
+      display:inline-block;
+      background:#ede9fe;
+      color:#6d28d9;
+      border-radius:999px;
+      padding:8px 12px;
+      font-size:12px;
+      font-weight:800;
+    }
+
+    .stat-card {
+      background:#fff;
+      border-radius:24px;
+      padding:20px;
+      box-shadow: var(--shadow);
+      border:1px solid #eef2f7;
+    }
+    .stat-card .label { color: var(--muted); font-size: 14px; margin-bottom:8px; }
+    .stat-card .value { font-size: 30px; font-weight: 900; margin-bottom:6px; }
+    .stat-card .sub { color: var(--muted); font-size: 13px; }
+
+    .progress-wrap {
+      background:#e2e8f0;
+      border-radius:999px;
+      height:16px;
+      overflow:hidden;
+    }
+    .progress-bar {
+      height:100%;
+      width:0%;
+      background: linear-gradient(90deg, var(--secondary), var(--primary));
+      border-radius:999px;
+      transition: width .25s ease;
+    }
+
+    .two-col {
+      display:grid;
+      grid-template-columns: 1fr 1.5fr;
+      gap:20px;
+    }
+
+    table {
+      width:100%;
+      border-collapse: collapse;
+      font-size: 14px;
+    }
+    th, td {
+      padding: 12px 10px;
+      border-bottom: 1px solid #eef2f7;
+      text-align: left;
+      vertical-align: top;
+    }
+    th { color: var(--muted); font-size: 13px; }
+    .status {
+      display:inline-block;
+      padding:6px 10px;
+      border-radius:999px;
+      font-size:12px;
+      font-weight:800;
+    }
+    .approved { background:#dcfce7; color:#166534; }
+    .pending { background:#fef3c7; color:#92400e; }
+    .rejected { background:#fee2e2; color:#991b1b; }
+
+    .tab-row {
+      display:flex;
+      flex-wrap:wrap;
+      gap:10px;
+      margin-bottom:16px;
+    }
+    .panel-tab {
+      background:#fff;
+      color:#4c1d95;
+      border:1px solid #e9d5ff;
+    }
+    .panel-tab.active {
+      background:linear-gradient(90deg, #7c3aed, #d946ef);
+      color:#fff;
+      border-color:transparent;
+    }
+
+    .search-box { max-width: 320px; }
+    .flex { display:flex; }
+    .gap-10 { gap:10px; }
+    .justify-between { justify-content:space-between; }
+    .align-center { align-items:center; }
+    .mb-16 { margin-bottom:16px; }
+    .mb-20 { margin-bottom:20px; }
+    .note {
+      margin-top:10px;
+      padding:12px 14px;
+      border-radius:14px;
+      background:#eff6ff;
+      color:#1e40af;
+      font-size:13px;
+    }
+    .small { font-size:12px; }
+    .link-row {
+      display:flex;
+      justify-content:space-between;
+      gap:10px;
+      margin-top:12px;
+      flex-wrap:wrap;
+    }
+    .text-link {
+      background:none;
+      border:0;
+      padding:0;
+      color:#6d28d9;
+      font-weight:700;
+      cursor:pointer;
+    }
+    .soft-card {
+      margin-top:16px;
+      padding:16px;
+      border:1px solid #e9d5ff;
+      background:#faf5ff;
+      border-radius:18px;
+    }
+
+    @media (max-width: 980px) {
+      .hero, .two-col, .grid-4, .grid-3, .grid-2, .grid-5 {
+        grid-template-columns: 1fr;
+      }
+      .feature-grid { grid-template-columns: 1fr; }
+      .title { font-size: 36px; }
+      .title-sm { font-size: 28px; }
+      .topbar { flex-direction: column; }
+    }
+  </style>
+</head>
+<body>
+  <div id="loginView" class="app-shell">
+    <div class="container hero">
+      <div>
+        <span class="badge">Online Fund Management Portal</span>
+        <h1 class="title">Colorful fund management system with separate member and admin login</h1>
+        <p class="subtitle">
+          Members can log in, submit monthly payments, and track their own records. Only the administrator can view all fund received, total collection, and approve or reject member payment submissions.
+        </p>
+
+        <div class="feature-grid">
+          <div class="feature-card">
+            <h4>Member Login</h4>
+            <p>Each member can sign in with a separate ID and only see personal payment information.</p>
+          </div>
+          <div class="feature-card">
+            <h4>Admin Login</h4>
+            <p>Admin has a different login ID and password with access to all collection and approval controls.</p>
+          </div>
+          <div class="feature-card">
+            <h4>Payment Tracking</h4>
+            <p>Supports bKash, Nagad, Rocket, and bank payment reference tracking.</p>
+          </div>
+          <div class="feature-card">
+            <h4>Approval System</h4>
+            <p>Only admin can approve or reject pending payments after review.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <h2 style="font-size:30px; margin-bottom:6px;">Sign in</h2>
+        <p class="muted" style="margin-top:0; margin-bottom:16px;">Use separate login for member and administrator.</p>
+
+        <div class="login-tabs">
+          <button class="tab-btn active" id="memberTabBtn" onclick="switchLoginTab('member')">Member Login</button>
+          <button class="tab-btn" id="adminTabBtn" onclick="switchLoginTab('admin')">Admin Login</button>
+        </div>
+
+        <div id="memberLoginForm">
+          <div class="field">
+            <label for="memberLoginId">Member ID</label>
+            <input id="memberLoginId" placeholder="Example: M001" value="M001" />
+          </div>
+          <div class="field">
+            <label for="memberPassword">Password</label>
+            <input id="memberPassword" type="password" placeholder="Enter password" value="1234" />
+          </div>
+          <button class="btn btn-primary" style="width:100%;" onclick="memberLogin()">Login as Member</button>
+          <div class="link-row">
+            <button class="text-link" onclick="toggleForgotPassword()">Forgot password?</button>
+            <button class="text-link" onclick="toggleSignupCard()">New member sign up</button>
+          </div>
+          <div class="note">Demo member login: <strong>M001</strong> / <strong>1234</strong></div>
+
+          <div id="signupCard" class="soft-card hidden">
+            <h4 style="margin:0 0 8px;">Create member account</h4>
+            <p class="muted small" style="margin-top:0;">New users can register with a unique member ID, phone number, and password.</p>
+            <div class="field">
+              <label for="signupMemberName">Full Name</label>
+              <input id="signupMemberName" placeholder="Example: Mehedi Hasan" />
+            </div>
+            <div class="field">
+              <label for="signupMemberId">Member ID</label>
+              <input id="signupMemberId" placeholder="Example: M005" />
+            </div>
+            <div class="field">
+              <label for="signupPhone">Phone Number</label>
+              <input id="signupPhone" placeholder="Example: 01712345678" />
+            </div>
+            <div class="field">
+              <label for="signupPassword">Password</label>
+              <input id="signupPassword" type="password" placeholder="Create password" />
+            </div>
+            <div class="field">
+              <label for="signupMonthlyTarget">Monthly Target</label>
+              <input id="signupMonthlyTarget" type="number" placeholder="Example: 2000" value="2000" />
+            </div>
+            <button class="btn btn-secondary" style="width:100%;" onclick="signupMember()">Create Account</button>
+          </div>
+
+          <div id="forgotPasswordCard" class="soft-card hidden">
+            <h4 style="margin:0 0 8px;">Reset forgotten password</h4>
+            <p class="muted small" style="margin-top:0;">Enter your unique member ID and registered recovery phone number.</p>
+            <div class="field">
+              <label for="forgotMemberId">Member ID</label>
+              <input id="forgotMemberId" placeholder="Example: M001" />
+            </div>
+            <div class="field">
+              <label for="forgotRecoveryPhone">Recovery Phone</label>
+              <input id="forgotRecoveryPhone" placeholder="Example: 01700000001" />
+            </div>
+            <div class="field">
+              <label for="forgotNewPassword">New Password</label>
+              <input id="forgotNewPassword" type="password" placeholder="Enter new password" />
+            </div>
+            <button class="btn btn-secondary" style="width:100%;" onclick="resetForgottenPassword()">Reset Password</button>
+          </div>
+        </div>
+
+        <div id="adminLoginForm" class="hidden">
+          <div class="field">
+            <label for="adminLoginId">Admin ID</label>
+            <input id="adminLoginId" placeholder="Example: ADMIN001" value="ADMIN001" />
+          </div>
+          <div class="field">
+            <label for="adminPassword">Password</label>
+            <input id="adminPassword" type="password" placeholder="Enter password" value="admin123" />
+          </div>
+          <button class="btn btn-primary" style="width:100%;" onclick="adminLogin()">Login as Administrator</button>
+          <div class="note">Demo admin login: <strong>ADMIN001</strong> / <strong>admin123</strong></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div id="memberView" class="portal-bg hidden">
+    <div class="portal-shell">
+      <div class="topbar">
+        <div>
+          <span class="pill">Member Portal</span>
+          <div class="title-sm" id="memberWelcome"></div>
+          <div class="muted" id="memberMeta"></div>
+        </div>
+        <div class="flex gap-10" style="flex-wrap:wrap;">
+          <button class="btn btn-outline" onclick="toggleMemberPasswordCard()">Change Password</button>
+          <button class="btn btn-outline" onclick="logout()">Logout</button>
+        </div>
+      </div>
+
+      <div id="memberPasswordCard" class="card mb-20 hidden">
+        <h3>Change password</h3>
+        <p class="muted">Keep a unique password for your own account.</p>
+        <div class="grid grid-3">
+          <div class="field" style="margin-bottom:0;">
+            <label for="currentPassword">Current Password</label>
+            <input id="currentPassword" type="password" placeholder="Current password" />
+          </div>
+          <div class="field" style="margin-bottom:0;">
+            <label for="newPassword">New Password</label>
+            <input id="newPassword" type="password" placeholder="New password" />
+          </div>
+          <div class="field" style="margin-bottom:0; display:flex; align-items:end;">
+            <button class="btn btn-secondary" style="width:100%;" onclick="changeMemberPassword()">Update Password</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="grid grid-3 mb-20">
+        <div class="stat-card">
+          <div class="label">Monthly Target</div>
+          <div class="value" id="memberTarget"></div>
+          <div class="sub">Expected monthly contribution</div>
+        </div>
+        <div class="stat-card">
+          <div class="label">Approved Total Paid</div>
+          <div class="value" id="memberApprovedTotal"></div>
+          <div class="sub">All approved contributions</div>
+        </div>
+        <div class="stat-card">
+          <div class="label">Current Month Progress</div>
+          <div class="value" id="memberProgressText"></div>
+          <div class="sub" id="memberProgressSub"></div>
+        </div>
+      </div>
+
+      <div class="card mb-20">
+        <h3>Monthly contribution status</h3>
+        <p class="muted">Track your progress against the target for the selected month.</p>
+        <div class="progress-wrap"><div id="memberProgressBar" class="progress-bar"></div></div>
+        <div class="flex justify-between mb-16" style="margin-top:12px; font-size:13px; color:var(--muted);">
+          <span id="memberPaidLabel"></span>
+          <span id="memberTargetLabel"></span>
+        </div>
+      </div>
+
+      <div class="two-col">
+        <div class="card">
+          <h3>Submit payment</h3>
+          <p class="muted">Admin will review and approve after verification.</p>
+          <div class="field">
+            <label for="memberMonth">Month</label>
+            <input type="month" id="memberMonth" value="2026-03" />
+          </div>
+          <div class="field">
+            <label for="memberAmount">Amount</label>
+            <input id="memberAmount" value="2000" />
+          </div>
+          <div class="field">
+            <label for="memberMethod">Payment Method</label>
+            <select id="memberMethod">
+              <option>bKash</option>
+              <option>Nagad</option>
+              <option>Rocket</option>
+              <option>Bank</option>
+            </select>
+          </div>
+          <div class="field">
+            <label for="memberTxn">Transaction ID</label>
+            <input id="memberTxn" placeholder="Example: BK12345678" />
+          </div>
+          <button class="btn btn-secondary" style="width:100%;" onclick="submitPayment()">Submit Payment</button>
+        </div>
+
+        <div class="card">
+          <h3>My payment history</h3>
+          <p class="muted">You can only see your own payment records.</p>
+          <div style="overflow-x:auto;">
+            <table>
+              <thead>
+                <tr>
+                  <th>Date</th>
+                  <th>Month</th>
+                  <th>Method</th>
+                  <th>TXN ID</th>
+                  <th>Amount</th>
+                  <th>Status</th>
+                </tr>
+              </thead>
+              <tbody id="memberPaymentsTable"></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div id="adminView" class="portal-admin-bg hidden">
+    <div class="portal-shell">
+      <div class="topbar">
+        <div>
+          <span class="pill">Admin Dashboard</span>
+          <div class="title-sm">Fund management control panel</div>
+          <div class="muted">Only administrator can view all fund receive totals and approve payments.</div>
+        </div>
+        <button class="btn btn-outline" onclick="logout()">Logout</button>
+      </div>
+
+      <div class="grid grid-4 mb-20">
+        <div class="stat-card">
+          <div class="label">Total Approved Collection</div>
+          <div class="value" id="totalCollected"></div>
+          <div class="sub">Verified member contributions</div>
+        </div>
+        <div class="stat-card">
+          <div class="label">Total Invested</div>
+          <div class="value" id="totalInvested"></div>
+          <div class="sub">Amount moved into investments</div>
+        </div>
+        <div class="stat-card">
+          <div class="label">Available Fund</div>
+          <div class="value" id="availableFund"></div>
+          <div class="sub">Collection minus investment</div>
+        </div>
+        <div class="stat-card">
+          <div class="label">Total Members</div>
+          <div class="value" id="totalMembers"></div>
+          <div class="sub">Active member accounts</div>
+        </div>
+      </div>
+
+      <div class="tab-row">
+        <button class="btn panel-tab active" id="paymentsPanelBtn" onclick="switchPanel('payments')">Payments</button>
+        <button class="btn panel-tab" id="membersPanelBtn" onclick="switchPanel('members')">Members</button>
+        <button class="btn panel-tab" id="investmentsPanelBtn" onclick="switchPanel('investments')">Investments</button>
+      </div>
+
+      <div id="paymentsPanel" class="card">
+        <div class="flex justify-between align-center mb-16" style="flex-wrap:wrap; gap:12px;">
+          <div>
+            <h3>Payment verification</h3>
+            <p class="muted" style="margin:4px 0 0;">Search by member ID, transaction ID, method, or status.</p>
+          </div>
+          <div class="search-box">
+            <input id="adminSearch" placeholder="Search payments..." oninput="renderAdminPayments()" />
+          </div>
+        </div>
+        <div style="overflow-x:auto;">
+          <table>
+            <thead>
+              <tr>
+                <th>Date</th>
+                <th>Member</th>
+                <th>Month</th>
+                <th>Method</th>
+                <th>TXN ID</th>
+                <th>Amount</th>
+                <th>Status</th>
+                <th>Action</th>
+              </tr>
+            </thead>
+            <tbody id="adminPaymentsTable"></tbody>
+          </table>
+        </div>
+      </div>
+
+      <div id="membersPanel" class="card hidden">
+        <h3>Members</h3>
+        <p class="muted">These IDs are used to identify member payments. Admin can also reset a member password.</p>
+        <div style="overflow-x:auto;">
+          <table>
+            <thead>
+              <tr>
+                <th>Member ID</th>
+                <th>Name</th>
+                <th>Monthly Target</th>
+                <th>Phone / Recovery</th>
+                <th>Reference Format</th>
+                <th>Reset Password</th>
+              </tr>
+            </thead>
+            <tbody id="membersTable"></tbody>
+          </table>
+        </div>
+      </div>
+
+      <div id="investmentsPanel" class="card hidden">
+        <h3>Investment tracking</h3>
+        <p class="muted">Monitor where fund money has been invested.</p>
+        <div style="overflow-x:auto;">
+          <table>
+            <thead>
+              <tr>
+                <th>Date</th>
+                <th>Title</th>
+                <th>Amount</th>
+                <th>Return Rate</th>
+                <th>Status</th>
+              </tr>
+            </thead>
+            <tbody id="investmentsTable"></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+
+<script>
+  const defaultMembers = [
+    { id: 'M001', name: 'Rahim Uddin', password: '1234', monthlyTarget: 2000, recoveryPhone: '01700000001' },
+    { id: 'M002', name: 'Karim Hasan', password: '2345', monthlyTarget: 2000, recoveryPhone: '01700000002' },
+    { id: 'M003', name: 'Nusrat Jahan', password: '3456', monthlyTarget: 2500, recoveryPhone: '01700000003' },
+    { id: 'M004', name: 'Sadia Islam', password: '4567', monthlyTarget: 1500, recoveryPhone: '01700000004' }
+  ];
+
+  const defaultPayments = [
+    { id: 1, memberId: 'M001', month: '2026-01', amount: 2000, method: 'bKash', txnId: 'BK10233', status: 'Approved', date: '2026-01-05' },
+    { id: 2, memberId: 'M002', month: '2026-01', amount: 2000, method: 'Nagad', txnId: 'NG33891', status: 'Approved', date: '2026-01-06' },
+    { id: 3, memberId: 'M003', month: '2026-01', amount: 2500, method: 'Bank', txnId: 'BNK22318', status: 'Pending', date: '2026-01-08' },
+    { id: 4, memberId: 'M001', month: '2026-02', amount: 2000, method: 'bKash', txnId: 'BK10999', status: 'Approved', date: '2026-02-05' }
+  ];
+
+  const defaultInvestments = [
+    { id: 1, date: '2026-01-20', title: 'FDR Investment', amount: 15000, returnRate: 8.5, status: 'Active' },
+    { id: 2, date: '2026-02-15', title: 'Short-Term Business Loan', amount: 10000, returnRate: 10, status: 'Active' }
+  ];
+
+  const adminAccount = { id: 'ADMIN001', password: 'admin123', role: 'admin' };
+  let session = null;
+  let activeLoginTab = 'member';
+
+  function getStore(key, fallback) {
+    const raw = localStorage.getItem(key);
+    if (!raw) return fallback;
+    try { return JSON.parse(raw); } catch { return fallback; }
+  }
+
+  function setStore(key, value) {
+    localStorage.setItem(key, JSON.stringify(value));
+  }
+
+  let members = getStore('fund_members', defaultMembers).map((m, index) => ({
+    ...m,
+    password: String(m.password || (index + 1) + '234'),
+    recoveryPhone: m.recoveryPhone || ('0170000000' + (index + 1)).slice(-11)
+  }));
+  let payments = getStore('fund_payments', defaultPayments);
+  let investments = getStore('fund_investments', defaultInvestments);
+
+  function syncData() {
+    setStore('fund_members', members);
+    setStore('fund_payments', payments);
+    setStore('fund_investments', investments);
+  }
+
+  function formatMoney(value) {
+    return new Intl.NumberFormat('en-BD', {
+      style: 'currency',
+      currency: 'BDT',
+      maximumFractionDigits: 0
+    }).format(Number(value) || 0);
+  }
+
+  function switchLoginTab(type) {
+    activeLoginTab = type;
+    document.getElementById('memberTabBtn').classList.toggle('active', type === 'member');
+    document.getElementById('adminTabBtn').classList.toggle('active', type === 'admin');
+    document.getElementById('memberLoginForm').classList.toggle('hidden', type !== 'member');
+    document.getElementById('adminLoginForm').classList.toggle('hidden', type !== 'admin');
+  }
+
+
+  function toggleForgotPassword() {
+    document.getElementById('forgotPasswordCard').classList.toggle('hidden');
+  }
+
+  function toggleSignupCard() {
+    document.getElementById('signupCard').classList.toggle('hidden');
+  }
+
+  function toggleMemberPasswordCard() {
+    document.getElementById('memberPasswordCard').classList.toggle('hidden');
+  }
+
+  function resetForgottenPassword() {
+    const memberId = document.getElementById('forgotMemberId').value.trim().toUpperCase();
+    const recoveryPhone = document.getElementById('forgotRecoveryPhone').value.trim();
+    const newPassword = document.getElementById('forgotNewPassword').value;
+    const memberIndex = members.findIndex(m => m.id === memberId && String(m.recoveryPhone).trim() === recoveryPhone);
+
+    if (memberIndex === -1) {
+      alert('Member ID or recovery phone did not match.');
+      return;
+    }
+    if (!newPassword || newPassword.length < 4) {
+      alert('New password must be at least 4 characters.');
+      return;
+    }
+
+    members[memberIndex].password = newPassword;
+    syncData();
+    document.getElementById('forgotNewPassword').value = '';
+    alert('Password reset successful. You can now log in with your new password.');
+  }
+
+  function changeMemberPassword() {
+    if (!session || session.role !== 'member') return;
+    const currentPassword = document.getElementById('currentPassword').value;
+    const newPassword = document.getElementById('newPassword').value;
+    const memberIndex = members.findIndex(m => m.id === session.memberId);
+
+    if (memberIndex === -1) {
+      alert('Member account not found.');
+      return;
+    }
+    if (members[memberIndex].password !== currentPassword) {
+      alert('Current password is incorrect.');
+      return;
+    }
+    if (!newPassword || newPassword.length < 4) {
+      alert('New password must be at least 4 characters.');
+      return;
+    }
+
+    members[memberIndex].password = newPassword;
+    syncData();
+    document.getElementById('currentPassword').value = '';
+    document.getElementById('newPassword').value = '';
+    alert('Password changed successfully.');
+  }
+
+  function adminResetMemberPassword(memberId) {
+    if (!session || session.role !== 'admin') {
+      alert('Only admin can reset member passwords.');
+      return;
+    }
+    const newPassword = prompt('Enter a new password for ' + memberId + ':');
+    if (!newPassword) return;
+    if (newPassword.length < 4) {
+      alert('Password must be at least 4 characters.');
+      return;
+    }
+    members = members.map(m => m.id === memberId ? { ...m, password: newPassword } : m);
+    syncData();
+    renderAdmin();
+    alert('Password reset completed for ' + memberId + '.');
+  }
+
+  function signupMember() {
+    const name = document.getElementById('signupMemberName').value.trim();
+    const memberId = document.getElementById('signupMemberId').value.trim().toUpperCase();
+    const phone = document.getElementById('signupPhone').value.trim();
+    const password = document.getElementById('signupPassword').value;
+    const monthlyTarget = Number(document.getElementById('signupMonthlyTarget').value || 0);
+
+    if (!name) {
+      alert('Please enter full name.');
+      return;
+    }
+    if (!memberId) {
+      alert('Please enter member ID.');
+      return;
+    }
+    if (!/^M[0-9A-Z]+$/.test(memberId)) {
+      alert('Member ID should start with M. Example: M005');
+      return;
+    }
+    if (memberId === adminAccount.id) {
+      alert('This member ID is reserved.');
+      return;
+    }
+    if (members.some(m => m.id === memberId)) {
+      alert('This member ID already exists. Please choose another one.');
+      return;
+    }
+    if (!/^01\d{9}$/.test(phone)) {
+      alert('Please enter a valid 11-digit phone number.');
+      return;
+    }
+    if (members.some(m => String(m.recoveryPhone).trim() === phone)) {
+      alert('This phone number is already used by another member.');
+      return;
+    }
+    if (!password || password.length < 4) {
+      alert('Password must be at least 4 characters.');
+      return;
+    }
+    if (!monthlyTarget || monthlyTarget <= 0) {
+      alert('Please enter a valid monthly target.');
+      return;
+    }
+
+    const newMember = {
+      id: memberId,
+      name,
+      password,
+      monthlyTarget,
+      recoveryPhone: phone
+    };
+
+    members.push(newMember);
+    syncData();
+
+    document.getElementById('signupMemberName').value = '';
+    document.getElementById('signupMemberId').value = '';
+    document.getElementById('signupPhone').value = '';
+    document.getElementById('signupPassword').value = '';
+    document.getElementById('signupMonthlyTarget').value = '2000';
+    document.getElementById('memberLoginId').value = memberId;
+    document.getElementById('memberPassword').value = password;
+
+    alert('Account created successfully. You can now log in as ' + memberId + '.');
+  }
+
+  function memberLogin() {
+    const loginId = document.getElementById('memberLoginId').value.trim().toUpperCase();
+    const password = document.getElementById('memberPassword').value;
+    const member = members.find(m => m.id === loginId && m.password === password);
+
+    if (!member) {
+      alert('Invalid member ID or password.');
+      return;
+    }
+
+    session = { role: 'member', memberId: member.id };
+    render();
+  }
+
+  function adminLogin() {
+    const loginId = document.getElementById('adminLoginId').value.trim().toUpperCase();
+    const password = document.getElementById('adminPassword').value;
+
+    if (loginId !== adminAccount.id || password !== adminAccount.password) {
+      alert('Invalid admin ID or password.');
+      return;
+    }
+
+    session = { role: 'admin', adminId: adminAccount.id };
+    render();
+  }
+
+  function logout() {
+    session = null;
+    render();
+  }
+
+  function updateStatus(paymentId, status) {
+    if (!session || session.role !== 'admin') {
+      alert('Only admin can approve or reject payments.');
+      return;
+    }
+
+    payments = payments.map(p => p.id === paymentId ? { ...p, status } : p);
+    syncData();
+    renderAdmin();
+  }
+
+  function submitPayment() {
+    if (!session || session.role !== 'member') {
+      alert('Please login as a member first.');
+      return;
+    }
+
+    const currentMember = members.find(m => m.id === session.memberId);
+    const month = document.getElementById('memberMonth').value;
+    const amount = Number(document.getElementById('memberAmount').value || 0);
+    const method = document.getElementById('memberMethod').value;
+    const txnId = document.getElementById('memberTxn').value.trim();
+
+    if (!month) {
+      alert('Please select month.');
+      return;
+    }
+    if (!amount || amount <= 0) {
+      alert('Please enter valid amount.');
+      return;
+    }
+    if (!txnId) {
+      alert('Please enter transaction ID.');
+      return;
+    }
+
+    const newPayment = {
+      id: payments.length ? Math.max(...payments.map(p => p.id)) + 1 : 1,
+      memberId: currentMember.id,
+      month,
+      amount,
+      method,
+      txnId,
+      status: 'Pending',
+      date: new Date().toISOString().slice(0,10)
+    };
+
+    payments.unshift(newPayment);
+    syncData();
+    document.getElementById('memberTxn').value = '';
+    alert('Payment submitted successfully. Admin can now verify it.');
+    renderMember();
+  }
+
+  function render() {
+    document.getElementById('loginView').classList.add('hidden');
+    document.getElementById('memberView').classList.add('hidden');
+    document.getElementById('adminView').classList.add('hidden');
+
+    if (!session) {
+      document.getElementById('loginView').classList.remove('hidden');
+      return;
+    }
+
+    if (session.role === 'member') {
+      document.getElementById('memberView').classList.remove('hidden');
+      renderMember();
+    } else if (session.role === 'admin') {
+      document.getElementById('adminView').classList.remove('hidden');
+      renderAdmin();
+    }
+  }
+
+  function renderMember() {
+    const currentMember = members.find(m => m.id === session.memberId);
+    const selectedMonth = document.getElementById('memberMonth').value || '2026-03';
+    const memberPayments = payments.filter(p => p.memberId === currentMember.id);
+    const approvedMemberTotal = memberPayments.filter(p => p.status === 'Approved').reduce((sum, p) => sum + p.amount, 0);
+    const monthlyPaid = memberPayments.filter(p => p.month === selectedMonth && p.status !== 'Rejected').reduce((sum, p) => sum + p.amount, 0);
+    const progress = Math.min(100, Math.round((monthlyPaid / currentMember.monthlyTarget) * 100 || 0));
+
+    document.getElementById('memberWelcome').textContent = `Welcome, ${currentMember.name}`;
+    document.getElementById('memberMeta').textContent = `Member ID: ${currentMember.id}`;
+    document.getElementById('memberTarget').textContent = formatMoney(currentMember.monthlyTarget);
+    document.getElementById('memberApprovedTotal').textContent = formatMoney(approvedMemberTotal);
+    document.getElementById('memberProgressText').textContent = `${progress}%`;
+    document.getElementById('memberProgressSub').textContent = `${formatMoney(monthlyPaid)} submitted for ${selectedMonth}`;
+    document.getElementById('memberPaidLabel').textContent = `Paid: ${formatMoney(monthlyPaid)}`;
+    document.getElementById('memberTargetLabel').textContent = `Target: ${formatMoney(currentMember.monthlyTarget)}`;
+    document.getElementById('memberProgressBar').style.width = progress + '%';
+    document.getElementById('memberAmount').value = currentMember.monthlyTarget;
+
+    const tbody = document.getElementById('memberPaymentsTable');
+    tbody.innerHTML = memberPayments.map(p => `
+      <tr>
+        <td>${p.date}</td>
+        <td>${p.month}</td>
+        <td>${p.method}</td>
+        <td>${p.txnId}</td>
+        <td>${formatMoney(p.amount)}</td>
+        <td><span class="status ${p.status.toLowerCase()}">${p.status}</span></td>
+      </tr>
+    `).join('') || `<tr><td colspan="6" class="muted">No payment found.</td></tr>`;
+  }
+
+  function renderAdmin() {
+    const totalCollected = payments.filter(p => p.status === 'Approved').reduce((sum, p) => sum + p.amount, 0);
+    const totalInvested = investments.reduce((sum, i) => sum + i.amount, 0);
+    const availableFund = totalCollected - totalInvested;
+
+    document.getElementById('totalCollected').textContent = formatMoney(totalCollected);
+    document.getElementById('totalInvested').textContent = formatMoney(totalInvested);
+    document.getElementById('availableFund').textContent = formatMoney(availableFund);
+    document.getElementById('totalMembers').textContent = members.length;
+
+    renderAdminPayments();
+
+    document.getElementById('membersTable').innerHTML = members.map(m => `
+      <tr>
+        <td><strong>${m.id}</strong></td>
+        <td>${m.name}</td>
+        <td>${formatMoney(m.monthlyTarget)}</td>
+        <td>${m.recoveryPhone || ''}</td>
+        <td>${m.id}-MONTH-TXN</td>
+        <td><button class="btn btn-outline small" onclick="adminResetMemberPassword('${m.id}')">Reset</button></td>
+      </tr>
+    `).join('');
+
+    document.getElementById('investmentsTable').innerHTML = investments.map(inv => `
+      <tr>
+        <td>${inv.date}</td>
+        <td>${inv.title}</td>
+        <td>${formatMoney(inv.amount)}</td>
+        <td>${inv.returnRate}%</td>
+        <td><span class="status approved">${inv.status}</span></td>
+      </tr>
+    `).join('');
+  }
+
+  function renderAdminPayments() {
+    const q = (document.getElementById('adminSearch').value || '').toLowerCase();
+    const filtered = payments.filter(p =>
+      p.memberId.toLowerCase().includes(q) ||
+      p.txnId.toLowerCase().includes(q) ||
+      p.method.toLowerCase().includes(q) ||
+      p.status.toLowerCase().includes(q) ||
+      p.month.toLowerCase().includes(q)
+    );
+
+    document.getElementById('adminPaymentsTable').innerHTML = filtered.map(p => `
+      <tr>
+        <td>${p.date}</td>
+        <td>${p.memberId}</td>
+        <td>${p.month}</td>
+        <td>${p.method}</td>
+        <td>${p.txnId}</td>
+        <td>${formatMoney(p.amount)}</td>
+        <td><span class="status ${p.status.toLowerCase()}">${p.status}</span></td>
+        <td>
+          <div class="flex gap-10">
+            <button class="btn btn-success small" onclick="updateStatus(${p.id}, 'Approved')">Approve</button>
+            <button class="btn btn-danger small" onclick="updateStatus(${p.id}, 'Rejected')">Reject</button>
+          </div>
+        </td>
+      </tr>
+    `).join('') || `<tr><td colspan="8" class="muted">No payment found.</td></tr>`;
+  }
+
+  function switchPanel(panel) {
+    ['payments', 'members', 'investments'].forEach(name => {
+      document.getElementById(name + 'Panel').classList.toggle('hidden', name !== panel);
+      document.getElementById(name + 'PanelBtn').classList.toggle('active', name === panel);
+    });
+  }
+
+  document.getElementById('memberMonth').addEventListener('change', () => {
+    if (session && session.role === 'member') renderMember();
+  });
+
+  syncData();
+  render();
+</script>
+</body>
+</html>
